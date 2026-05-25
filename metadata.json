@@ -1,0 +1,10 @@
+{
+  "name": "OcularOptics",
+  "description": "Interactive simulation of human eye optics, camera focus mechanics, and refractive error correction.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
