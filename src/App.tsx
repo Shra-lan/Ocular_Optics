@@ -16,14 +16,69 @@ export default function App() {
     useLiveCamera: false,
   });
 
-  const [presets, setPresets] = useState<Preset[]>([]);
+  const [presets, setPresets] = useState<Preset[]>([
+    {
+      id: '1',
+      name: 'Normal Vision (Emmetropia)',
+      description: 'Parallel light rays converge perfectly onto the retina.',
+      mode: 'EYE',
+      axialLength: 100,
+      objectDistance: 500,
+      correctivePower: 0,
+    },
+    {
+      id: '2',
+      name: 'Patient A: Severe Myopia',
+      description: 'Elongated eyeball causing focus in front. Requires concave lens.',
+      mode: 'EYE',
+      axialLength: 120,
+      objectDistance: 500,
+      correctivePower: -4.0,
+    },
+    {
+      id: '3',
+      name: 'Patient B: Hypermetropia',
+      description: 'Shortened eyeball causing focus behind. Requires convex lens.',
+      mode: 'EYE',
+      axialLength: 80,
+      objectDistance: 200,
+      correctivePower: 4.0,
+    },
+    {
+      id: '3b',
+      name: 'Patient C: Presbyopia (Age 65)',
+      description: 'Loss of lens elasticity prevents near focus accommodation.',
+      mode: 'EYE',
+      axialLength: 100, 
+      objectDistance: 150, 
+      correctivePower: 5.0,
+      age: 65,
+    },
+    {
+      id: '4',
+      name: 'Camera: Manual Focus',
+      description: 'Focal length is fixed. Sensor distance changes to focus.',
+      mode: 'CAMERA',
+      axialLength: 100,
+      objectDistance: 200,
+      correctivePower: 0,
+    }
+  ]);
 
   useEffect(() => {
     // Fetch initial presets from API
     fetch('/api/patients')
-      .then(res => res.json())
-      .then(data => setPresets(data))
-      .catch(err => console.error("Could not load presets", err));
+      .then(res => {
+         if (!res.ok) throw new Error("HTTP Status " + res.status);
+         return res.json();
+       })
+      .then(data => {
+         // Only override if data is valid
+         if (data && Array.isArray(data) && data.length > 0) {
+           setPresets(data);
+         }
+      })
+      .catch(err => console.error("Could not load presets from server, using fallbacks:", err));
   }, []);
 
   const loadPreset = (p: Preset) => {
